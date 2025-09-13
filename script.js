@@ -1,7 +1,7 @@
-let allPlants = []; // store all plants for filtering
-let cart = []; // store cart items
+let allPlants = [];
+let cart = [];
 
-// Load categories from API
+
 const loadCategory = () => {
   const url = 'https://openapi.programming-hero.com/api/categories';
   fetch(url)
@@ -14,14 +14,13 @@ const displayCategory = (categories) => {
   const categoryContainer = document.getElementById('category-container');
   categoryContainer.innerHTML = "";
 
-  // 🔹 Add "All Trees" button manually
   const allBtn = document.createElement('button');
   allBtn.className = "btn btn-success w-full mb-2 lg:justify-start active-category";
   allBtn.textContent = "All Trees";
   allBtn.setAttribute("data-category", "All Trees");
   categoryContainer.appendChild(allBtn);
 
-  // 🔹 Add other category buttons dynamically
+
   categories.forEach((category) => {
     const categoryBtn = document.createElement('button');
     categoryBtn.className = "btn btn-outline btn-success w-full mb-2 lg:justify-start";
@@ -30,18 +29,17 @@ const displayCategory = (categories) => {
     categoryContainer.appendChild(categoryBtn);
   });
 
-  // 🔹 Add click event for filtering
+
   document.querySelectorAll('#category-container button').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const selectedCategory = e.target.getAttribute("data-category");
 
-      // remove active style from all
+
       document.querySelectorAll('#category-container button').forEach((b) => {
         b.classList.remove("btn-success", "active-category");
         b.classList.add("btn-outline", "btn-success");
       });
 
-      // add active style to clicked
       e.target.classList.remove("btn-outline");
       e.target.classList.add("btn-success", "active-category");
 
@@ -50,7 +48,6 @@ const displayCategory = (categories) => {
   });
 };
 
-// Load all plants from API
 const allCardSection = () => {
   fetch('https://openapi.programming-hero.com/api/plants')
     .then((res) => res.json())
@@ -61,7 +58,6 @@ const allCardSection = () => {
     .catch((err) => console.error("Error loading plants:", err));
 };
 
-// Filter plants by category
 const filterByCategory = (category) => {
   if (category === "All Trees") {
     displayAllCard(allPlants);
@@ -73,7 +69,9 @@ const filterByCategory = (category) => {
   }
 };
 
-// Display cards dynamically
+
+
+
 const displayAllCard = (cards) => {
   const cardContainer = document.getElementById('card-container');
   cardContainer.innerHTML = "";
@@ -95,7 +93,7 @@ const displayAllCard = (cards) => {
         <img src="${card.image}" alt="${card.name}" class="h-full w-full object-cover"/>
       </figure>
       <div class="card-body p-6">
-        <h3 onclick="showPlantDetails('${card.id}')" class="card-title text-xl font-semibold mb-2">${card.name}</h3>
+        <h3 onclick="loadModal(${card.id})" class="card-title text-xl font-semibold mb-2">${card.name}</h3>
         <p class="text-sm text-gray-600 leading-relaxed">
           ${card.description ? card.description.slice(0, 120) : "No description"}...
         </p>
@@ -117,7 +115,8 @@ const displayAllCard = (cards) => {
     cardContainer.appendChild(cardDiv);
   });
 
-  // attach event listeners for add-to-cart buttons
+
+
   document.querySelectorAll('.add-to-cart').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const name = e.target.getAttribute("data-name");
@@ -127,9 +126,30 @@ const displayAllCard = (cards) => {
   });
 };
 
-// Add to Cart function
+  const loadModal = (id) => {
+    const plant = allPlants.find(p => p.id === id);
+    if (plant) {
+      document.querySelector('#my_modal_5 .modal-box').innerHTML = `
+        <h3 class="text-lg font-bold">${plant.name}</h3>
+        <div class="w-full h-64 my-4">
+          <img src="${plant.image}" class="w-full h-full object-cover rounded-lg" alt="">
+        </div>
+        <p class="py-4"><span class="font-semibold">Category:</span> ${plant.category}</p>
+        <p class="py-4"><span class="font-semibold">Price:</span> ৳ ${plant.price}</p>
+        <p class="py-4"><span class="font-semibold">Description:</span> ${plant.description}</p>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn">Close</button>
+          </form>
+        </div>
+      `;
+      my_modal_5.showModal();
+    }
+  };
+
+
 const addToCart = (name, price) => {
-  // check if item already in cart
+
   let existing = cart.find(item => item.name === name);
   if (existing) {
     existing.qty += 1;
@@ -138,17 +158,14 @@ const addToCart = (name, price) => {
   }
   displayCart();
 
-  // show modal/alert
   alert(`${name} has been added to your cart.`);
 };
 
-// Remove item from cart
 const removeFromCart = (name) => {
   cart = cart.filter(item => item.name !== name);
   displayCart();
 };
 
-// Display Cart dynamically
 const displayCart = () => {
   const cartContainer = document.querySelector('.Cart');
   cartContainer.innerHTML = `
@@ -177,7 +194,6 @@ const displayCart = () => {
     <p class="font-semibold text-gray-600">Total: ৳ ${total}</p>
   `;
 
-  // attach remove button events
   document.querySelectorAll('.remove-btn').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const name = e.target.getAttribute("data-name");
@@ -186,6 +202,6 @@ const displayCart = () => {
   });
 };
 
-// Run functions on page load
+
 allCardSection();
 loadCategory();
