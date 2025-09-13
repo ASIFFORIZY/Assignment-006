@@ -73,8 +73,8 @@
       </div>
     </div>
 
-        <!-- hero section -->
-        <!-- hero section -->
+    <!-- hero section -->
+    <!-- hero section -->
     <div
       class="flex bg-[#CFF0DC] justify-between items-end flex-col lg:flex-row"
     >
@@ -106,7 +106,6 @@
     </div>
 
     <main class="bg-[#F0FDF4]">
-
       <h1 class="text-center text-3xl font-bold py-10">Choose Your Trees</h1>
 
       <div class="flex flex-col lg:flex-row gap-4 px-5">
@@ -118,6 +117,15 @@
 
         <!-- Cards (Responsive Grid) -->
         <div class="lg:w-4/6">
+          <!-- Spinner -->
+          <div
+            id="loading-spinner"
+            class="w-full flex justify-center py-10 hidden"
+          >
+            <span class="loading loading-dots loading-xl text-green-600"></span>
+          </div>
+
+          <!-- Cards (Responsive Grid) -->
           <div
             id="card-container"
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
@@ -136,12 +144,10 @@
       </div>
 
       <!-- Modal for Plant Details --><!-- Open the modal using ID.showModal() method -->
-     
+
       <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
-          <div id="modalContainer">
-           
-          </div>
+          <div id="modalContainer"></div>
         </div>
       </dialog>
 

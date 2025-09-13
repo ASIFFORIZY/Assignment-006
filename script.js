@@ -1,8 +1,7 @@
 let allPlants = [];
 let cart = [];
 
-
-const loadCategory = () => {
+const loadCategory  =  ()  =>{
   const url = 'https://openapi.programming-hero.com/api/categories';
   fetch(url)
     .then((res) => res.json())
@@ -20,7 +19,6 @@ const displayCategory = (categories) => {
   allBtn.setAttribute("data-category", "All Trees");
   categoryContainer.appendChild(allBtn);
 
-
   categories.forEach((category) => {
     const categoryBtn = document.createElement('button');
     categoryBtn.className = "btn btn-outline btn-success w-full mb-2 lg:justify-start";
@@ -29,46 +27,53 @@ const displayCategory = (categories) => {
     categoryContainer.appendChild(categoryBtn);
   });
 
-
   document.querySelectorAll('#category-container button').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const selectedCategory = e.target.getAttribute("data-category");
-
 
       document.querySelectorAll('#category-container button').forEach((b) => {
         b.classList.remove("btn-success", "active-category");
         b.classList.add("btn-outline", "btn-success");
       });
-
       e.target.classList.remove("btn-outline");
       e.target.classList.add("btn-success", "active-category");
 
+      // Filter cards
       filterByCategory(selectedCategory);
     });
   });
 };
 
+// Load all plants initially
 const allCardSection = () => {
+  loaddingSpinner(true); // show spinner
   fetch('https://openapi.programming-hero.com/api/plants')
     .then((res) => res.json())
     .then((data) => {
-      allPlants = data.plants; // save for filtering
-      displayAllCard(allPlants); // show all by default
+      allPlants = data.plants; 
+      displayAllCard(allPlants);
+      loaddingSpinner(false); 
     })
-    .catch((err) => console.error("Error loading plants:", err));
+    .catch((err) => {
+      console.error("Error loading plants:", err);
+      loaddingSpinner(false);
+    });
 };
 
 const filterByCategory = (category) => {
-  if (category === "All Trees") {
-    displayAllCard(allPlants);
-  } else {
-    const filtered = allPlants.filter(
-      (plant) => plant.category.toLowerCase() === category.toLowerCase()
-    );
-    displayAllCard(filtered);
-  }
+  loaddingSpinner(true); 
+  setTimeout(() => {
+    if (category === "All Trees") {
+      displayAllCard(allPlants);
+    } else {
+      const filtered = allPlants.filter(
+        (plant) => plant.category.toLowerCase() === category.toLowerCase()
+      );
+      displayAllCard(filtered);
+    }
+    loaddingSpinner(false); 
+  }, 300); 
 };
-
 
 
 
@@ -93,15 +98,15 @@ const displayAllCard = (cards) => {
         <img src="${card.image}" alt="${card.name}" class="h-full w-full object-cover"/>
       </figure>
       <div class="card-body p-6">
-        <h3 onclick="loadModal(${card.id})" class="card-title text-xl font-semibold mb-2">${card.name}</h3>
-        <p class="text-sm text-gray-600 leading-relaxed">
-          ${card.description ? card.description.slice(0, 120) : "No description"}...
+        <h3 onclick="loadModal(${card.id})" class="card-title text-lg font-semibold ">${card.name}</h3>
+        <p class="text-[12px]  text-gray-600 leading-relaxed">
+          ${card.description}
         </p>
-        <div class="flex justify-between items-center mt-4 ">
-          <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs  text-center font-medium">
+        <div class="flex justify-between items-center mt-2">
+          <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs text-center font-medium">
             ${card.category}
           </span>
-          <p class=" font-semibold text-gray-600 flex-1 text-right mr-5 ">৳${card.price}</p>
+          <p class="font-semibold text-gray-600 flex-1 text-right mr-5">৳${card.price}</p>
         </div>
         <button
           class="btn btn-success rounded-full text-white border-none w-full mt-5 shadow-md add-to-cart"
@@ -115,8 +120,6 @@ const displayAllCard = (cards) => {
     cardContainer.appendChild(cardDiv);
   });
 
-
-
   document.querySelectorAll('.add-to-cart').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const name = e.target.getAttribute("data-name");
@@ -126,30 +129,28 @@ const displayAllCard = (cards) => {
   });
 };
 
-  const loadModal = (id) => {
-    const plant = allPlants.find(p => p.id === id);
-    if (plant) {
-      document.querySelector('#my_modal_5 .modal-box').innerHTML = `
-        <h3 class="text-lg font-bold">${plant.name}</h3>
-        <div class="w-full h-64 mt-4">
-          <img src="${plant.image}" class="w-full h-full object-cover rounded-lg" alt="">
-        </div>
-        <p class="pt-2 text-sm "><span class="font-semibold">Category:</span> ${plant.category}</p>
-        <p class="pt-2 text-sm "><span class="font-semibold">Price:</span> ৳ ${plant.price}</p>
-        <p class="pt-2 text-sm "><span class="font-semibold">Description:</span> ${plant.description}</p>
-        <div class="modal-action">
-          <form method="dialog">
-            <button class="btn">Close</button>
-          </form>
-        </div>
-      `;
-      my_modal_5.showModal();
-    }
-  };
-
+const loadModal = (id) => {
+  const plant = allPlants.find(p => p.id === id);
+  if (plant) {
+    document.querySelector('#my_modal_5 .modal-box').innerHTML = `
+      <h3 class="text-lg font-bold">${plant.name}</h3>
+      <div class="w-full h-64 mt-4">
+        <img src="${plant.image}" class="w-full h-full object-cover rounded-lg" alt="">
+      </div>
+      <p class="pt-2 text-sm"><span class="font-semibold">Category:</span> ${plant.category}</p>
+      <p class="pt-2 text-sm"><span class="font-semibold">Price:</span> ৳ ${plant.price}</p>
+      <p class="pt-2 text-sm"><span class="font-semibold">Description:</span> ${plant.description}</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <button class="btn">Close</button>
+        </form>
+      </div>
+    `;
+    my_modal_5.showModal();
+  }
+};
 
 const addToCart = (name, price) => {
-
   let existing = cart.find(item => item.name === name);
   if (existing) {
     existing.qty += 1;
@@ -157,7 +158,6 @@ const addToCart = (name, price) => {
     cart.push({ name, price, qty: 1 });
   }
   displayCart();
-
   alert(`${name} has been added to your cart.`);
 };
 
@@ -168,9 +168,7 @@ const removeFromCart = (name) => {
 
 const displayCart = () => {
   const cartContainer = document.querySelector('.Cart');
-  cartContainer.innerHTML = `
-    <h2 class="font-semibold text-lg pb-3">Your Cart</h2>
-  `;
+  cartContainer.innerHTML = `<h2 class="font-semibold text-lg pb-3">Your Cart</h2>`;
 
   let total = 0;
 
@@ -184,7 +182,7 @@ const displayCart = () => {
         <h1 class="font-semibold text-sm">${item.name}</h1>
         <p class="text-sm text-gray-400">৳${item.price} x ${item.qty}</p>
       </div>
-      <button class="text-gray-400  remove-btn" data-name="${item.name}">x</button>
+      <button class="text-gray-400 remove-btn" data-name="${item.name}">x</button>
     `;
     cartContainer.appendChild(itemDiv);
   });
@@ -202,6 +200,18 @@ const displayCart = () => {
   });
 };
 
+const loaddingSpinner = (status) => {
+  const spinner = document.getElementById('loading-spinner');
+  const cards = document.getElementById('card-container');
 
-allCardSection();
-loadCategory();
+  if (status) {
+    spinner.classList.remove('hidden');
+    cards.classList.add('hidden');
+  } else {
+    spinner.classList.add('hidden');
+    cards.classList.remove('hidden');
+  }
+};
+
+  allCardSection();
+  loadCategory();
