@@ -131,12 +131,12 @@ const displayAllCard = (cards) => {
     if (plant) {
       document.querySelector('#my_modal_5 .modal-box').innerHTML = `
         <h3 class="text-lg font-bold">${plant.name}</h3>
-        <div class="w-full h-64 my-4">
+        <div class="w-full h-64 mt-4">
           <img src="${plant.image}" class="w-full h-full object-cover rounded-lg" alt="">
         </div>
-        <p class="py-4"><span class="font-semibold">Category:</span> ${plant.category}</p>
-        <p class="py-4"><span class="font-semibold">Price:</span> ৳ ${plant.price}</p>
-        <p class="py-4"><span class="font-semibold">Description:</span> ${plant.description}</p>
+        <p class="pt-2 text-sm "><span class="font-semibold">Category:</span> ${plant.category}</p>
+        <p class="pt-2 text-sm "><span class="font-semibold">Price:</span> ৳ ${plant.price}</p>
+        <p class="pt-2 text-sm "><span class="font-semibold">Description:</span> ${plant.description}</p>
         <div class="modal-action">
           <form method="dialog">
             <button class="btn">Close</button>
